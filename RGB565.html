@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>RGB565 Color Picker for VIDI X and Arduino IDE code</title>
+  <style>
+    #colorPicker {
+      width: 200px;
+      height: 200px;
+      border: 1px solid #111;
+    }
+    .colorExample {
+      display: inline-block;
+      width: 50px;
+      height: 50px;
+      margin-right: 10px;
+    }
+    .colorName {
+      display: inline-block;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    body {
+      background-color: #EEE;
+      color: #111;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    .darkTheme {
+      background-color: #111;
+      color: #EEE;
+    }
+  </style>
+  <script>
+    function updateColor() {
+      var red = document.getElementById("red").value;
+      var green = document.getElementById("green").value;
+      var blue = document.getElementById("blue").value;
+
+      var r = Math.floor((red / 31) * 255);
+      var g = Math.floor((green / 63) * 255);
+      var b = Math.floor((blue / 31) * 255);
+
+      var rgb565Color = ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3);
+      var hexColor = rgb565ToHex(rgb565Color);
+
+      document.getElementById("colorPicker").style.backgroundColor = hexColor;
+      document.getElementById("colorValue").textContent = "RGB565: 0x" + rgb565Color.toString(16).toUpperCase() + " | Hex: " + hexColor + " | Arduino IDE Code example: #define NAME_YOUR_COLOR 0x" + rgb565Color.toString(16).toUpperCase() +";"
+    }
+
+    function rgb565ToHex(rgb565) {
+      var r = ((rgb565 >> 11) & 0x1F) << 3;
+      var g = ((rgb565 >> 5) & 0x3F) << 2;
+      var b = (rgb565 & 0x1F) << 3;
+
+      return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+    }
+
+    function componentToHex(c) {
+      var hex = c.toString(16);
+      return hex.length == 1 ? "0" + hex : hex;
+    }
+
+    // Funkcija za prebacivanje na tamnu temu
+    function toggleDarkTheme() {
+      var body = document.body;
+      body.classList.toggle("darkTheme");
+    }
+  </script>
+</head>
+<body>
+  <h1>RGB565 Color Picker for VIDI X and Arduino IDE code</h1>
+  <div id="colorPicker"></div>
+  <div>
+    <label for="red">Red:</label>
+    <input type="range" id="red" min="0" max="31" oninput="updateColor()">
+  </div>
+  <div>
+    <label for="green">Green:</label>
+    <input type="range" id="green" min="0" max="63" oninput="updateColor()">
+  </div>
+  <div>
+    <label for="blue">Blue:</label>
+    <input type="range" id="blue" min="0" max="31" oninput="updateColor()">
+  </div>
+  <div>
+    <p id="colorValue"></p>
+  </div>
+
+  <h2>Primjeri boja:</h2>
+  <div class="colorExample" style="background-color: rgb(0, 0, 0);"></div>
+  <span class="colorName">#define TFT_BLACK 0x0000</span><br>
+
+  <div class="colorExample" style="background-color: rgb(0, 0, 255);"></div>
+  <span class="colorName">#define TFT_BLUE 0x001F</span><br>
+
+  <div class="colorExample" style="background-color: rgb(248, 0, 0);"></div>
+  <span class="colorName">#define TFT_RED 0xF800</span><br>
+
+  <div class="colorExample" style="background-color: rgb(0, 252, 0);"></div>
+  <span class="colorName">#define TFT_GREEN 0x07E0</span><br>
+
+  <div class="colorExample" style="background-color: rgb(0, 255, 255);"></div>
+  <span class="colorName">#define TFT_CYAN 0x07FF</span><br>
+
+  <div class="colorExample" style="background-color: rgb(248, 31, 248);"></div>
+  <span class="colorName">#define TFT_MAGENTA 0xF81F</span><br>
+
+  <div class="colorExample" style="background-color: rgb(255, 224, 0);"></div>
+  <span class="colorName">#define TFT_YELLOW 0xFFE0</span><br>
+
+  <div class="colorExample" style="background-color: rgb(255, 255, 255);"></div>
+  <span class="colorName">#define TFT_WHITE 0xFFFF</span><br>
+
+  <h2>Promjena teme:</h2>
+  <button onclick="toggleDarkTheme()">Tamna tema</button>
+</body>
+</html>
